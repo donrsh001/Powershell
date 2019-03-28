@@ -1,0 +1,27 @@
+function Run-DBQuery
+{
+	[CmdletBinding()]
+	[OutputType([int])]
+	Param
+	(
+		# Param1 help description
+		[Parameter(Mandatory = $true,
+				   ValueFromPipelineByPropertyName = $true,
+				   Position = 0)]
+		[OutputType([System.Data.DataTable])]$QueryString
+		
+		
+	)
+	
+	$ConnectionString = 'Data Source=SECC609\SP_TECH;Integrated Security=True;User ID=;Password='
+	
+	$command = New-Object System.Data.SqlClient.SqlCommand ($QueryString, $ConnectionString)
+	$adapter = New-Object System.Data.SqlClient.SqlDataAdapter ($command)
+	
+	#Load the Dataset
+	$dataset = New-Object System.Data.DataSet
+	[void]$adapter.Fill($dataset)
+	
+	#Return the Dataset
+	return @(, $dataset.Tables[0])
+}
